@@ -1,9 +1,9 @@
 # Secured-Constraints-Unit-Commitment-SCUC-model-of-Power-system  
-Secured Constraints Unit Commitment model of Power system, including the model based on AC flow equation and DC flow equation. 
+Secured Constraints Unit Commitment model of Power system, including the model based on AC flow equation and DC flow equation(the AC model is relaxed by 'Second Order Cone Relaxation' to get a convex problem). 
 Only the constraints in pre-contingency state are considered. 
 There is a piecewise function expression for power generation costs.   
 However, I'm sorry that the version is relative old, and it may be difficult to read or modify.   
-电力系统安全约束单位承诺模型，包括基于交流潮流方程和直流潮流方程的模型。  
+电力系统安全约束机组组合问题模型，包括基于交流潮流方程和直流潮流方程的模型（交流潮流模型进行了二阶锥松弛以确保问题是凸的）。  
 仅考虑意外前状态下的约束。  
 有一个用于发电成本的分段函数表达式。  
 但是，很抱歉该版本相对较旧，可能难以阅读或修改。  
