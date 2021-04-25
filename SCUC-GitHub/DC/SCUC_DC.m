@@ -1,4 +1,4 @@
-%SCUC²ÉÓÃÁËÖ±Á÷³±Á÷·½³Ì
+%SCUCé‡‡ç”¨äº†ç›´æµæ½®æµæ–¹ç¨‹
 clc;
 clear;
 close all;
@@ -10,25 +10,23 @@ addpath('../function');
 alltime = tic;
 tic
 %%
-% ¶ÁÈë
+% è¯»å…¥
 % casename = input('Please enter case name : ', 's');
 casename = 'case14mod_SCUC';
 % casename = 'case30mod';
 % casename = 'IEEE118_new';
-k_safe = 0.95;          %°²È«ÏµÊı£¬ÓÃÓÚÁôÒ»¶¨µÄÔ£¶È£¬Õë¶Ô³±Á÷°²È«Ô¼Êø
+k_safe = 0.95;          %å®‰å…¨ç³»æ•°ï¼Œç”¨äºç•™ä¸€å®šçš„è£•åº¦ï¼Œé’ˆå¯¹æ½®æµå®‰å…¨çº¦æŸ
 
-% Ê±¶ÎÊıt ÓÃÓÚ»ú×é×éºÏÓÅ»¯
-n_T = 24;
-% ·¢µç»úÇúÏß ¶ş´Îº¯Êı ·Ö¶ÎÏßĞÔ»¯
-n_L = 20;
+n_T = 24;       % æ—¶æ®µæ•°t ç”¨äºæœºç»„ç»„åˆä¼˜åŒ–
+n_L = 20;       % å‘ç”µæœºæ›²çº¿ äºŒæ¬¡å‡½æ•° åˆ†æ®µçº¿æ€§åŒ–
 
-% ³õÊ¼»¯ÎÄ¼ş
+% åˆå§‹åŒ–æ–‡ä»¶
 initial;
 PD = bus(:, BUS_PD)/baseMVA;
 QD = bus(:, BUS_QD)/baseMVA;
 % PD = PD*ones(1, n_T);
 % QD = QD*ones(1, n_T);
-% 24Ğ¡Ê±µÄ¸ººÉÊı¾İ
+% 24å°æ—¶çš„è´Ÿè·æ•°æ®
 Q_factor = QD/sum(QD);
 P_factor = PD/sum(PD);
 %P_sum = sum(PD)-sum(PD)/2*sin(pi/12*[0:n_T-1]+pi/3);
@@ -38,33 +36,33 @@ PD = P_factor*P_sum;
 spnningReserve = 1.02*P_sum;
 
 %%
-%µ¼ÄÉ¾ØÕó¼ÆËã
+%å¯¼çº³çŸ©é˜µè®¡ç®—
 % [Ybus, Yf, Yt] = makeYbus(baseMVA, bus, M_branch);   % build admitance matrix
-[Bbus, Bf, Pbusinj, Pfinj] = makeBdc(baseMVA, bus, branch);       %Ö±Á÷³±Á÷
+[Bbus, Bf, Pbusinj, Pfinj] = makeBdc(baseMVA, bus, branch);       %ç›´æµæ½®æµ
 %%
-% ´´½¨¾ö²ß±äÁ¿
-% ·¢µç»ú³öÁ¦ ·Ç·¢µç»ú½ÚµãÈ¡0
+% åˆ›å»ºå†³ç­–å˜é‡
+% å‘ç”µæœºå‡ºåŠ› éå‘ç”µæœºèŠ‚ç‚¹å–0
 gen_P = sdpvar(n_bus, n_T);
-gen_P_upper = sdpvar(n_bus, n_T);   %·¢µç»úÓĞ¹¦³öÁ¦ÉÏ½ç
+gen_P_upper = sdpvar(n_bus, n_T);   %å‘ç”µæœºæœ‰åŠŸå‡ºåŠ›ä¸Šç•Œ
 % gen_Q = sdpvar(n_bus, n_T);
-% ¸÷½ÚµãµçÑ¹·ùÖµ Ïà½Ç
-% Vm = sdpvar(n_bus, n_T);      %·ùÖµ
-Vm = ones(n_bus, n_T);        %·ùÖµ Ö±Á÷³±Á÷
-Va = sdpvar(n_bus, n_T);      %Ïà½Ç
+% å„èŠ‚ç‚¹ç”µå‹å¹…å€¼ ç›¸è§’
+% Vm = sdpvar(n_bus, n_T);      %å¹…å€¼
+Vm = ones(n_bus, n_T);        %å¹…å€¼ ç›´æµæ½®æµ
+Va = sdpvar(n_bus, n_T);      %ç›¸è§’
 
-% ¸÷Ö§Â·³±Á÷
-PF_D = sdpvar(n_branch, n_T);     %P Flow Direct ÕıÏòÓĞ¹¦³±Á÷ 1->2
-% QF_D = sdpvar(n_M_branch, n_T);     %Q Flow Direct ÕıÏòÎŞ¹¦³±Á÷ 1->2
-% PF_R = sdpvar(n_branch, n_T);     %P Flow Reverse ·´ÏòÓĞ¹¦³±Á÷ 2->1
-% QF_R = sdpvar(n_M_branch, n_T);     %Q Flow Reverse ·´ÏòÎŞ¹¦³±Á÷ 2->1
+% å„æ”¯è·¯æ½®æµ
+PF_D = sdpvar(n_branch, n_T);     %P Flow Direct æ­£å‘æœ‰åŠŸæ½®æµ 1->2
+% QF_D = sdpvar(n_M_branch, n_T);     %Q Flow Direct æ­£å‘æ— åŠŸæ½®æµ 1->2
+% PF_R = sdpvar(n_branch, n_T);     %P Flow Reverse åå‘æœ‰åŠŸæ½®æµ 2->1
+% QF_R = sdpvar(n_M_branch, n_T);     %Q Flow Reverse åå‘æ— åŠŸæ½®æµ 2->1
 
-% »ú×é×´Ì¬
-u_state = binvar(n_bus, n_T);     %°´Ä¸ÏßÊı£¬·Ç·¢µç»ú½ÚµãÈ¡0
-C = [];     %Ô¼Êø
+% æœºç»„çŠ¶æ€
+u_state = binvar(n_bus, n_T);     %æŒ‰æ¯çº¿æ•°ï¼Œéå‘ç”µæœºèŠ‚ç‚¹å–0
+C = [];     %çº¦æŸ
 % C = sdpvar(C)>=0;
 
 %%
-%·¢µç»ú·ÑÓÃÇúÏß ¶ş´Îº¯Êı·Ö¶ÎÏßĞÔ»¯
+%å‘ç”µæœºè´¹ç”¨æ›²çº¿ äºŒæ¬¡å‡½æ•°åˆ†æ®µçº¿æ€§åŒ–
 P_nl = sdpvar(n_gen, n_L, n_T);
 for i = 1: n_gen
     for t = 1: n_T
@@ -79,7 +77,7 @@ for i = 1: n_gen
     end
 end
 %%
-% »ú×é¿ª»ú·ÑÓÃ Cjk
+% æœºç»„å¼€æœºè´¹ç”¨ Cjk
 cost_up = sdpvar(n_gen, n_T);
 C = [C, cost_up >= 0];
 for k = 1: n_T
@@ -106,27 +104,27 @@ for k = 2: n_T
     end
 end
 %% 
-% »ú×é×éºÏÔ¼Êø
-%ÏµÍ³¹¦ÂÊÆ½ºâÔ¼Êø
+% æœºç»„ç»„åˆçº¦æŸ
+%ç³»ç»ŸåŠŸç‡å¹³è¡¡çº¦æŸ
 for t = 1: n_T
     C = [C,
         sum(gen_P(gen(:,GEN_BUS),t)) >= sum(PD(:,t)),
         ];
 end
 %%
-% »ú×é×éºÏÔ¼Êø
-% ÅÀÆÂÏŞÖÆ
+% æœºç»„ç»„åˆçº¦æŸ
+% çˆ¬å¡é™åˆ¶
 for t = 1: n_T
     if (t > 1)
     C = [C,
-        %Õâ¸öÔ¼ÊøÊÇÕÕ2006ÄêÎÄÏ×
+        %è¿™ä¸ªçº¦æŸæ˜¯ç…§2006å¹´æ–‡çŒ®
         %A Computationally Efficient Mixed-Integer Linear Formulation for the Thermal Unit Commitment Problem
-        %Ğ´µÄ£¬²»ÖªµÀPmax*(1-u)ÕâÏîÓĞÊ²Ã´ÓÃ
-        %ÅÀÆÂÏŞÖÆºÍÆô¶¯ÏŞÖÆ (ramp-up & startup)    (18)
+        %å†™çš„ï¼Œä¸çŸ¥é“Pmax*(1-u)è¿™é¡¹æœ‰ä»€ä¹ˆç”¨
+        %çˆ¬å¡é™åˆ¶å’Œå¯åŠ¨é™åˆ¶ (ramp-up & startup)    (18)
         gen_P_upper(gen(:,GEN_BUS),t) <= gen_P(gen(:,GEN_BUS),t-1) + RU.*u_state(gen(:,GEN_BUS),t-1) + ...
                                          SU.*(u_state(gen(:,GEN_BUS),t)-u_state(gen(:,GEN_BUS),t-1)) + ...
                                          (gen(:, GEN_PMAX)/baseMVA).*(1-u_state(gen(:,GEN_BUS),t)),
-        %ÏÂÆÂÏŞÖÆ (ramp-down)       (20)
+        %ä¸‹å¡é™åˆ¶ (ramp-down)       (20)
         gen_P(gen(:,GEN_BUS),t-1) - gen_P(gen(:,GEN_BUS),t) <= RD.*u_state(gen(:,GEN_BUS),t) + ...
                                                                SD.*(u_state(gen(:,GEN_BUS),t-1)-u_state(gen(:,GEN_BUS),t)) + ...
                                                                (gen(:, GEN_PMAX)/baseMVA).*(1-u_state(gen(:,GEN_BUS),t-1)),
@@ -134,19 +132,19 @@ for t = 1: n_T
     end
     if (t < n_T)
         C = [C,
-            %¹Ø»úÏŞÖÆ (shutdown)    (19)
+            %å…³æœºé™åˆ¶ (shutdown)    (19)
             gen_P_upper(gen(:,GEN_BUS),t) <= (gen(:, GEN_PMAX)/baseMVA).*u_state(gen(:,GEN_BUS),t+1) + ...
                                              SD.*(u_state(gen(:,GEN_BUS),t)-u_state(gen(:,GEN_BUS),t+1)),
                                              ];
     end
 end
 %%
-% »ú×é×éºÏÔ¼Êø
-%×îĞ¡Æô¶¯Ê±¼äÏŞÖÆ
+% æœºç»„ç»„åˆçº¦æŸ
+%æœ€å°å¯åŠ¨æ—¶é—´é™åˆ¶
 for i = 1: n_gen
     Gi = min(n_T, (min_up(i)-init_up(i))*init_state(gen(i,GEN_BUS)));
-    %·ÖÈı¶Î ÆğÊ¼£¬ÖĞ¼ä£¬½áÎ²
-    %ÆğÊ¼Ê±¿¼ÂÇ³õÊ¼×´Ì¬µÄÓ°Ïì£¬ÖĞ¼ä²»Ğè¿¼ÂÇÌ«¶à£¬½áÎ²±£Ö¤¿ªÁËÒÔºóÃ»¹Ø¹ı
+    %åˆ†ä¸‰æ®µ èµ·å§‹ï¼Œä¸­é—´ï¼Œç»“å°¾
+    %èµ·å§‹æ—¶è€ƒè™‘åˆå§‹çŠ¶æ€çš„å½±å“ï¼Œä¸­é—´ä¸éœ€è€ƒè™‘å¤ªå¤šï¼Œç»“å°¾ä¿è¯å¼€äº†ä»¥åæ²¡å…³è¿‡
     if (Gi >= 1)
         C = [C,
             sum(u_state(gen(i,GEN_BUS), [1: Gi])) == Gi,
@@ -178,8 +176,8 @@ for i = 1: n_gen
     end
 end
 %%
-% »ú×é×éºÏÔ¼Êø
-%×îĞ¡¹Ø»úÊ±¼äÏŞÖÆ Í¬×îĞ¡¿ª»úÊ±¼äÏŞÖÆ
+% æœºç»„ç»„åˆçº¦æŸ
+%æœ€å°å…³æœºæ—¶é—´é™åˆ¶ åŒæœ€å°å¼€æœºæ—¶é—´é™åˆ¶
 for i = 1: n_gen
     Li = min(n_T, (min_down(i)-init_down(i))*(1-init_state(gen(i,GEN_BUS))));
     if (Li >= 1)
@@ -219,12 +217,12 @@ New_Br_temp(gen(:, GEN_BUS)) = [];
 C = [C,
     gen_P(New_Br_temp, :) == 0,
 %     gen_Q(New_Br_temp, :) == 0,
-    u_state(New_Br_temp, :) == 0      %¿¼ÂÇ»ú×é×éºÏ ·Ç·¨µç»ú½ÚµãÈ¡0
-    ];  %·Ç·¢µç»ú½ÚµãÓĞ¹¦ÎŞ¹¦Îª0
+    u_state(New_Br_temp, :) == 0      %è€ƒè™‘æœºç»„ç»„åˆ éæ³•ç”µæœºèŠ‚ç‚¹å–0
+    ];  %éå‘ç”µæœºèŠ‚ç‚¹æœ‰åŠŸæ— åŠŸä¸º0
 
 %%
-%³±Á÷·½³Ì
-% Ö§Â·³±Á÷Ô¼Êø
+%æ½®æµæ–¹ç¨‹
+% æ”¯è·¯æ½®æµçº¦æŸ
 for t = 1: n_T
     C = [C,
         PF_D(:, t) == Bf*Va(:, t) + Pfinj,
@@ -232,7 +230,7 @@ for t = 1: n_T
 end
 
 %%
-%½Úµã¹¦ÂÊÆ½ºâÔ¼Êø
+%èŠ‚ç‚¹åŠŸç‡å¹³è¡¡çº¦æŸ
 for t = 1: n_T
     for i = 1: n_bus
         C = [C,
@@ -244,14 +242,14 @@ for t = 1: n_T
     end
 end
 %%
-% Ğı×ª±¸ÓÃÔ¼Êø
+% æ—‹è½¬å¤‡ç”¨çº¦æŸ
 for t = 1: n_T
     C = [C,
         sum(gen_P_upper(gen(:, GEN_BUS), t)) >= sum(spnningReserve(:, t))
         ];
 end
 %%
-%·¢µç»úÓĞ¹¦³öÁ¦Ô¼Êø
+%å‘ç”µæœºæœ‰åŠŸå‡ºåŠ›çº¦æŸ
 for  t = 1: n_T
     for i = 1: n_gen
         C = [C,
@@ -262,10 +260,10 @@ for  t = 1: n_T
 end
 
 %%
-%Ö§Â·³±Á÷Ô¼Êø
-% ²âÊÔ½á¹û ¿¼ÂÇÊÓÔÚ¹¦ÂÊÔ¼Êø  P^2+Q^2<=S^2
+%æ”¯è·¯æ½®æµçº¦æŸ
+% æµ‹è¯•ç»“æœ è€ƒè™‘è§†åœ¨åŠŸç‡çº¦æŸ  P^2+Q^2<=S^2
 % for i = 1: n_branch
-%     if (branch(i, RATE_A) ~= 0)     %rateAÎª0ÔòÈÏÎª²»ĞèÒªÌí¼Ó°²È«Ô¼Êø
+%     if (branch(i, RATE_A) ~= 0)     %rateAä¸º0åˆ™è®¤ä¸ºä¸éœ€è¦æ·»åŠ å®‰å…¨çº¦æŸ
 %         C = [C,
 %             PF_D(i)^2+QF_D(i)^2 <= (branch(i, RATE_A)/baseMVA)^2
 %             ];
@@ -273,21 +271,21 @@ end
 % end
 % -Pmax <=P <= Pmax
 for i = 1: n_branch
-    if (branch(i, RATE_A) ~= 0)     %rateAÎª0ÔòÈÏÎª²»ĞèÒªÌí¼Ó°²È«Ô¼Êø
+    if (branch(i, RATE_A) ~= 0)     %rateAä¸º0åˆ™è®¤ä¸ºä¸éœ€è¦æ·»åŠ å®‰å…¨çº¦æŸ
         C = [C,
             -k_safe*branch(i, RATE_A)/baseMVA <= PF_D(i,:) <= k_safe*branch(i, RATE_A)/baseMVA
             ];
     end
 end
 %%
-% ¹ÊÕÏÌ¬Ô¼Êø
+% æ•…éšœæ€çº¦æŸ
 %%
-%·¢µç»ú³É±¾º¯Êı£¬½ö¿¼ÂÇ2´Îº¯Êı  Èç¹û¶à´ÎÒªÖØĞ´
+%å‘ç”µæœºæˆæœ¬å‡½æ•°ï¼Œä»…è€ƒè™‘2æ¬¡å‡½æ•°  å¦‚æœå¤šæ¬¡è¦é‡å†™
 opf_value = sum(gencost(:, GENCOST_C2)'*(gen_P(gen(:, GEN_BUS),:)*baseMVA).^2) + ...
             sum(gencost(:, GENCOST_C1)'* gen_P(gen(:, GEN_BUS),:)*baseMVA) + ...
             sum(gencost(:, GENCOST_C0)'*u_state(gen(:, GEN_BUS),:)) + ...
             sum(sum(cost_up));
-%·Ö¶ÎÏßĞÔ»¯ĞÎÊ½
+%åˆ†æ®µçº¿æ€§åŒ–å½¢å¼
 opf_value = 0;
 for i = 1: n_gen
     for t = 1: n_T
@@ -298,11 +296,11 @@ for i = 1: n_gen
     end
 end
 opf_value = opf_value + sum(sum(cost_up));
-%             ones(1,n_gen)*cost_up*ones(n_T,1);     %×îĞ¡Öµ
+%             ones(1,n_gen)*cost_up*ones(n_T,1);     %æœ€å°å€¼
         
 %%     
-%ÅäÖÃ ¿´²»Ì«¶®
-% ops = sdpsettings('solver','mosek','verbose',2,'usex0',0);       %Ê¹ÓÃ³õÖµ Ö÷ÒªÊÇµçÑ¹È¡1
+%é…ç½® çœ‹ä¸å¤ªæ‡‚
+% ops = sdpsettings('solver','mosek','verbose',2,'usex0',0);       %ä½¿ç”¨åˆå€¼ ä¸»è¦æ˜¯ç”µå‹å–1
 ops = sdpsettings('solver','cplex','verbose',2,'usex0',0);      
 % ops.gurobi.MIPGap = 1e-2;
 % ops.mosek.MSK_IPAR_MIO_CONIC_OUTER_APPROXIMATION = 'MSK_ON';
@@ -310,16 +308,16 @@ ops = sdpsettings('solver','cplex','verbose',2,'usex0',0);
 % ops.mosek.MSK_IPAR_MIO_HEURISTIC_LEVEL = 4;
 % ops.mosek.MSK_DPAR_MIO_TOL_REL_GAP = 1e-6;
 % ops.mosek.MSK_DPAR_MIO_REL_GAP_CONST = 1e-4;
-%mosek ²»ĞèÒªyalmip×ª»»¶ş½××¶Ô¼Êø£¬cplexºÍgurobiĞèÒª ºÜºÄÄÚ´æ
+%mosek ä¸éœ€è¦yalmipè½¬æ¢äºŒé˜¶é”¥çº¦æŸï¼Œcplexå’Œgurobiéœ€è¦ å¾ˆè€—å†…å­˜
 % ops = sdpsettings('verbose',2);
 % ops.sedumi.eps = 1e-6;
 % ops.gurobi.MIPGap = 1e-6;
 %%
 toc
-%Çó½â         
+%æ±‚è§£         
 result = optimize(C, opf_value, ops);
 toc(alltime)
-%µ÷ÊÔÓÃ
+%è°ƒè¯•ç”¨
 % gen_P = value(gen_P);
 % gen_Q = value(gen_Q);
 % xij_1 = value(xij_1);
@@ -331,11 +329,11 @@ toc(alltime)
 % QF_R = value(QF_R);
 % u_state = value(u_state);
 
-if result.problem == 0 % problem =0 ´ú±íÇó½â³É¹¦ 
+if result.problem == 0 % problem =0 ä»£è¡¨æ±‚è§£æˆåŠŸ 
 else
-    error('Çó½â³ö´í');
+    error('æ±‚è§£å‡ºé”™');
 end  
-plot([0: n_T], [init_gen_P(gen(:,GEN_BUS)) value(gen_P(gen(:,GEN_BUS),:))]);    %¸÷»ú×é³öÁ¦
+plot([0: n_T], [init_gen_P(gen(:,GEN_BUS)) value(gen_P(gen(:,GEN_BUS),:))]);    %å„æœºç»„å‡ºåŠ›
 
 gen_P = value(gen_P);
 % gen_Q = value(gen_Q);
