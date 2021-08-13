@@ -14,4 +14,5 @@ Besides, note that the model is based on the Matlab, Yalmip, and the solver is G
 If you have any idea on improving this model, please contact me.   
 如果您有任何改进此模型的想法，请联系我.
 
-
+注：matlab上传github，中文注释乱码的问题，暂时没找到解决办法，如果您有，可以告诉我。目前我的解决方法是，上传了一个.zip的压缩包，下载后解压应该不会乱码。
+Note that: when I upload the .m files to github, its Chinese notes will be error codes, I didn't find any way to solve it, if you know, please tell me. Now my solution is that a .zip file is uploaded, upzip it seems to avoid the error codes problem.
